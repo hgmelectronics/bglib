@@ -29,6 +29,6 @@
     "energy"
   ],
   "dependencies": {
-    "bleadvertise": "*"
+    "bleadvertise": "git+https://github.com/hgmelectronics/bleadvertise.git#master"
   }
 }
