@@ -307,13 +307,13 @@ Packet.prototype.getByteArray = function(callback) {
 	if (this.packetMode) {
 		numHeaderBytes++;
 		// Create the packet
-		packetHeader =  new Buffer(numHeaderBytes);
+		packetHeader =  Buffer.alloc(numHeaderBytes);
 		// Add the length byte to the front
 		packetHeader[i++] = this.payload.length + 4;
 	}
 	else {
 		// Just make a normal header
-		packetHeader =  new Buffer(numHeaderBytes);
+		packetHeader =  Buffer.alloc(numHeaderBytes);
 	}
 
 	// Make the buffer
@@ -520,7 +520,7 @@ bglib.prototype.reconstructPackets = function(incomingBytes, callback) {
 				// need to make sure that we don't over index;
 				var payloadLen = (lolen > (this.bgapiRXBuffer.length - 4) ? (this.bgapiRXBuffer.length - 4) : lolen);
 
-				var payload = new Buffer(payloadLen);
+				var payload = Buffer.alloc(payloadLen);
 
 				for (var j = 0; j < payloadLen; j++) {
 					payload[j] = this.bgapiRXBuffer[4 + j];
@@ -574,7 +574,7 @@ bglib.prototype.getPacket = function(command, params, callback) {
 	this.verifyParams(command.paramCode, params, function(err) {
 
 		// Get command information
-		var payloadBuffer = new Buffer(0);
+		var payloadBuffer = Buffer.alloc(0);
 
 		// There's a problem with the params passed in.
 		if (err) {
@@ -600,12 +600,12 @@ bglib.prototype.getPacket = function(command, params, callback) {
 					// If it's already separated into an array for us
 					if (Array.isArray(param)) {
 
-						payloadBuffer = Buffer.concat([payloadBuffer, new Buffer(param)]);
+						payloadBuffer = Buffer.concat([payloadBuffer, Buffer.from(param)]);
 
 					}
 					else {
 						// Add each byte of param to array
-						var rBuf = new Buffer(4);
+						var rBuf = Buffer.alloc(4);
 						rBuf.writeUInt32LE(param, 0);
 						payloadBuffer = Buffer.concat([payloadBuffer, rBuf], payloadBuffer.length + rBuf.length);
 					}
@@ -618,11 +618,11 @@ bglib.prototype.getPacket = function(command, params, callback) {
 				// If it's already separated into an array for us
 					if (Array.isArray(param)) {
 
-						payloadBuffer = Buffer.concat([payloadBuffer, new Buffer(param)]);
+						payloadBuffer = Buffer.concat([payloadBuffer, Buffer.from(param)]);
 
 					} else {
 						// Add each byte of param to array
-						var rBuf = new Buffer(2);
+						var rBuf = Buffer.alloc(2);
 						rBuf.writeUInt16LE(param, 0);
 						payloadBuffer = Buffer.concat([payloadBuffer, rBuf], payloadBuffer.length + rBuf.length);
 					}
@@ -633,7 +633,7 @@ bglib.prototype.getPacket = function(command, params, callback) {
 				case 3:
 				case 2:
 					// Add each byte of param to array
-					var rBuf = new Buffer(1);
+					var rBuf = Buffer.alloc(1);
 					rBuf.writeUInt8(param, 0);
 					payloadBuffer = Buffer.concat([payloadBuffer, rBuf], payloadBuffer.length + rBuf.length);
 
@@ -648,7 +648,7 @@ bglib.prototype.getPacket = function(command, params, callback) {
 						dataBuf = param;
 					}
 					else if (Array.isArray(param) || typeof param == "string") {
-						dataBuf = new Buffer(param);
+						dataBuf = Buffer.from(param);
 					}
 					else {
 						return callback && callback(new Error("Invalid parameter type. Should be an Array or string"));
@@ -661,7 +661,7 @@ bglib.prototype.getPacket = function(command, params, callback) {
 					command.header.payloadLowBits = totalPacketSize & 0xFF;
 					command.header.payloadHighBits = totalPacketSize >> 8;
 
-					dataBuf = Buffer.concat([new Buffer([dataLength]), dataBuf], dataLength + 1);
+					dataBuf = Buffer.concat([Buffer.from([dataLength]), dataBuf], dataLength + 1);
 
 					payloadBuffer = Buffer.concat([payloadBuffer, dataBuf], payloadBuffer.length + dataBuf.length);
 
@@ -671,7 +671,7 @@ bglib.prototype.getPacket = function(command, params, callback) {
 				case 10:
 					var address;
 					if (Array.isArray(param)) {
-						address = new Buffer(param);
+						address = Buffer.from(param);
 					}
 					if (Buffer.isBuffer(param)) {
 						address = param;
@@ -689,7 +689,7 @@ bglib.prototype.getPacket = function(command, params, callback) {
 						dataBuf = param;
 					}
 					else if (Array.isArray(param) || typeof param == "string") {
-						dataBuf = new Buffer(param);
+						dataBuf = Buffer.from(param);
 					}
 					else {
 						return callback && callback(new Error("Invalid parameter type. Should be an Array or string"));
@@ -702,7 +702,7 @@ bglib.prototype.getPacket = function(command, params, callback) {
 					command.header.payloadLowBits = totalPacketSize & 0xFF;
 					command.header.payloadHighBits = totalPacketSize >> 8;
 
-					dataBuf = Buffer.concat([new Buffer([dataLength]), new Buffer(dataBuf)], dataLength + 1);
+					dataBuf = Buffer.concat([Buffer.from([dataLength]), Buffer.from(dataBuf)], dataLength + 1);
 
 					payloadBuffer = Buffer.concat([payloadBuffer, dataBuf], payloadBuffer.length + dataBuf.length);
 

@@ -19,14 +19,14 @@ assert(bglib, "BGLib could not be imported...");
 // Packet Creation:
 bglib.getPacket(bg.api.systemHello, function(err, response) {
 	assert(!err, "Error creating the simple hello packet.");
-	assert(response.cID == 1 
+	assert(response.cID == 1
 		&& response.cClass == 0, "Invalid packet created.");
 	console.log("Simple Packet Creation Passed.")
 });
 
-bglib.getPacket(bg.api.gapConnectDirect, [new Buffer([108, 189, 40, 93, 28, 216]), 1, 25, 50, 500, 8], function(err, response) {
+bglib.getPacket(bg.api.gapConnectDirect, [Buffer.from([108, 189, 40, 93, 28, 216]), 1, 25, 50, 500, 8], function(err, response) {
 	assert(!err, "Error creating the complex connect packet.");
-	assert(response.cID == 3 
+	assert(response.cID == 3
 		&& response.cClass == 6, "Invalid packet created.");
 	console.log("Packet", response);
 	console.log("Complex Packet Creation Passed.");
@@ -45,7 +45,7 @@ console.log("Detecting Too Many Parameters Passed.");
 
 
 // Packet Parsing:
-var incoming = new Buffer([128, 38, 6, 0, 185, 0, 108, 189, 40, 93, 28, 216, 1, 255, 27, 2, 1, 6, 17, 6, 186, 86, 137, 166, 250, 191, 162, 189, 1, 70, 125, 110, 56, 88, 171, 173, 5, 22, 10, 24, 7, 4, 128, 38, 6, 0, 181, 0, 108, 189, 40, 93, 28, 216, 1, 255, 27, 2, 1, 6, 17, 6, 186, 86, 137, 166, 250, 191, 162, 189, 1, 70, 125, 110, 56, 88, 171, 173, 5, 22, 10, 24, 7, 4, 128, 38, 6, 0, 191, 0, 108, 189, 40, 93, 28, 216, 1, 255, 27, 2, 1, 6, 17, 6, 186, 86, 137, 166, 250, 191, 162, 189, 1, 70, 125, 110, 56, 88, 171, 173, 5, 22, 10, 24, 7, 4, 128, 38, 6, 0, 182, 0, 108, 189, 40, 93, 28, 216, 1, 255, 27, 2, 1, 6, 17, 6, 186, 86, 137, 166, 250, 191, 162, 189, 1, 70, 125, 110, 56, 88, 171, 173, 5, 22, 10, 24, 7, 4, 128, 38, 6, 0, 179, 0, 108, 189, 40, 93, 28, 216, 1, 255, 27, 2, 1, 6, 17, 6, 186, 86, 137, 166, 250, 191, 162, 189, 1, 70, 125, 110, 56, 88, 171, 173, 5, 22]);
+var incoming = Buffer.from([128, 38, 6, 0, 185, 0, 108, 189, 40, 93, 28, 216, 1, 255, 27, 2, 1, 6, 17, 6, 186, 86, 137, 166, 250, 191, 162, 189, 1, 70, 125, 110, 56, 88, 171, 173, 5, 22, 10, 24, 7, 4, 128, 38, 6, 0, 181, 0, 108, 189, 40, 93, 28, 216, 1, 255, 27, 2, 1, 6, 17, 6, 186, 86, 137, 166, 250, 191, 162, 189, 1, 70, 125, 110, 56, 88, 171, 173, 5, 22, 10, 24, 7, 4, 128, 38, 6, 0, 191, 0, 108, 189, 40, 93, 28, 216, 1, 255, 27, 2, 1, 6, 17, 6, 186, 86, 137, 166, 250, 191, 162, 189, 1, 70, 125, 110, 56, 88, 171, 173, 5, 22, 10, 24, 7, 4, 128, 38, 6, 0, 182, 0, 108, 189, 40, 93, 28, 216, 1, 255, 27, 2, 1, 6, 17, 6, 186, 86, 137, 166, 250, 191, 162, 189, 1, 70, 125, 110, 56, 88, 171, 173, 5, 22, 10, 24, 7, 4, 128, 38, 6, 0, 179, 0, 108, 189, 40, 93, 28, 216, 1, 255, 27, 2, 1, 6, 17, 6, 186, 86, 137, 166, 250, 191, 162, 189, 1, 70, 125, 110, 56, 88, 171, 173, 5, 22]);
 bglib.parseIncoming(incoming, function(err, parsedPackets) {
 	assert(!err, "There was an error parsing packets: " + err);
 	assert(parsedPackets.length == 4, "Packets not parsed correctly");
